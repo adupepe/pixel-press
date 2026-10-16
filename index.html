@@ -61,8 +61,11 @@
   .feat-body h1 { font-size: clamp(26px, 3.4vw, 36px); letter-spacing: -0.02em; line-height: 1.15; margin: 14px 0 12px; }
   .feat-body p { color: var(--muted); font-size: 15px; margin-bottom: 18px; }
   .author-row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); }
-  .author-row img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
   .author-row b { color: var(--text); }
+  .ap-badge {
+    width: 34px; height: 34px; border-radius: 50%; background: var(--accent); color: #fff;
+    display: inline-grid; place-items: center; font-weight: 800; font-size: 12px; letter-spacing: .02em;
+  }
 
   /* TAGS */
   .bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin: 44px 0 24px; }
@@ -162,7 +165,7 @@
       <h1>Architektura Server &amp; Client Components w praktyce — przewodnik bez mitów</h1>
       <p>Gdzie naprawdę przebiega granica między serwerem a przeglądarką w Next.js 16 i jak unikać najczęstszych błędów hydracji.</p>
       <div class="author-row">
-        <img src="https://randomuser.me/api/portraits/men/36.jpg" alt="Adrian" />
+        <span class="ap-badge">AP</span>
         <span><b>Adrian Pietryga</b> · 14 paź 2026 · 8 min czytania</span>
       </div>
     </div>
@@ -188,7 +191,7 @@
 
     <div class="bio-box">
       <div class="bio-head">
-        <img src="https://randomuser.me/api/portraits/men/36.jpg" alt="Autor" />
+        <span class="ap-badge" style="width:52px;height:52px;font-size:15px">AP</span>
         <div><b>Adrian Pietryga</b><span style="color:var(--muted);font-size:13px;display:block">Front-End Developer &amp; Autor</span></div>
       </div>
       <p>Piszę o rzemiośle frontendowym: szybkim UI, czystym CSS i architekturze aplikacji w React oraz Next.js.</p>
@@ -201,7 +204,7 @@
   <div><span class="pill" id="a-tag"></span></div>
   <h1 id="a-title"></h1>
   <div class="author-row" style="margin-bottom:10px">
-    <img src="https://randomuser.me/api/portraits/men/36.jpg" alt="Adrian" />
+    <span class="ap-badge">AP</span>
     <span id="a-meta"></span>
   </div>
   <img class="hero-cover" id="a-img" src="" alt="" />
