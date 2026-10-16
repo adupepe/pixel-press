@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pixel Press — Blog o technologii i designie</title>
+<meta name="description" content="Pixel Press — minimalistyczny blog o frontendzie, designie i narzędziach dla twórców." />
+<style>
+  :root {
+    --bg: #ffffff; --panel: #f7f7f8; --border: #e6e6ea;
+    --text: #17171c; --muted: #6f6f7a; --accent: #3157ff; --code: #f0f0f4;
+  }
+  body.dark {
+    --bg: #0d0e12; --panel: #14161c; --border: #262a35;
+    --text: #e9eaf0; --muted: #9aa0ae; --accent: #7c93ff; --code: #1b1e27;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: var(--bg); color: var(--text); transition: background .3s, color .3s;
+  }
+  header {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 32px; background: var(--bg); border-bottom: 1px solid var(--border);
+  }
+  .logo { font-weight: 800; font-size: 18px; letter-spacing: -0.02em; }
+  .logo span { color: var(--accent); }
+  .controls { display: flex; gap: 10px; align-items: center; }
+  .search {
+    padding: 9px 16px; border: 1px solid var(--border); border-radius: 999px;
+    font-size: 13px; background: var(--panel); color: var(--text); outline: none; width: 200px;
+  }
+  .search:focus { border-color: var(--accent); }
+  .theme-btn {
+    border: 1px solid var(--border); background: var(--panel); color: var(--text);
+    width: 38px; height: 38px; border-radius: 999px; cursor: pointer; font-size: 15px;
+    transition: .15s;
+  }
+  .theme-btn:hover { border-color: var(--accent); }
+  .hero { max-width: 760px; margin: 0 auto; padding: 72px 24px 40px; text-align: center; }
+  .hero .eyebrow { color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+  .hero h1 { font-size: clamp(34px, 6vw, 54px); letter-spacing: -0.03em; margin: 14px 0; line-height: 1.05; }
+  .hero p { color: var(--muted); font-size: 17px; }
+  .tags { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 22px; }
+  .tag {
+    border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px;
+    font-size: 12px; color: var(--muted); cursor: pointer; transition: .15s; background: none;
+  }
+  .tag:hover { color: var(--text); border-color: var(--accent); }
+  .tag.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .list { max-width: 760px; margin: 0 auto; padding: 20px 24px 80px; }
+  .post {
+    display: block; text-decoration: none; color: inherit;
+    padding: 28px 0; border-bottom: 1px solid var(--border); transition: .15s;
+  }
+  .post:hover h2 { color: var(--accent); }
+  .post .meta { display: flex; gap: 12px; align-items: center; font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+  .post .meta .t { background: var(--code); padding: 3px 10px; border-radius: 999px; color: var(--accent); font-weight: 600; }
+  .post h2 { font-size: 22px; letter-spacing: -0.02em; transition: .15s; }
+  .post p { color: var(--muted); font-size: 15px; line-height: 1.65; margin-top: 8px; }
+  .post .more { font-size: 13px; color: var(--accent); font-weight: 600; margin-top: 12px; display: inline-block; }
+  article.view {
+    max-width: 700px; margin: 0 auto; padding: 60px 24px 100px; display: none;
+  }
+  article.view h1 { font-size: clamp(30px, 5vw, 44px); letter-spacing: -0.03em; margin-bottom: 14px; }
+  article.view .meta { color: var(--muted); font-size: 13px; margin-bottom: 28px; }
+  article.view p { color: var(--text); font-size: 17px; line-height: 1.8; margin-bottom: 18px; opacity: .92; }
+  article.view .back {
+    border: none; background: none; color: var(--accent); font-size: 14px; font-weight: 600;
+    cursor: pointer; padding: 0; margin-bottom: 28px;
+  }
+  footer { border-top: 1px solid var(--border); text-align: center; color: var(--muted); font-size: 13px; padding: 36px 24px; }
+  @media (max-width: 640px) { .search { width: 130px; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Pixel<span>Press</span></div>
+  <div class="controls">
+    <input class="search" id="search" type="search" placeholder="Szukaj artykułu…" />
+    <button class="theme-btn" id="themeBtn" aria-label="Przełącz motyw">🌙</button>
+  </div>
+</header>
+
+<div id="home">
+  <section class="hero">
+    <p class="eyebrow">Blog o frontendzie i designie</p>
+    <h1>Piszę o tym, jak powstają dobre strony.</h1>
+    <p>Krótkie esejki, praktyczne triki i przemyślenia — bez lania wody.</p>
+    <div class="tags" id="tags"></div>
+  </section>
+  <div class="list" id="list"></div>
+</div>
+
+<article class="view" id="article">
+  <button class="back" id="back">← Wróć do listy</button>
+  <h1 id="a-title"></h1>
+  <p class="meta" id="a-meta"></p>
+  <p id="a-p1"></p>
+  <p id="a-p2"></p>
+  <p id="a-p3"></p>
+</article>
+
+<footer>
+  Pixel Press — demonstracyjny blog · HTML / CSS / JavaScript
+</footer>
+
+<script>
+  const posts = [
+    { t: "Dlaczego mniej znaczy więcej w UI", tag: "design", date: "12 paź 2026", read: "4 min",
+      lead: "O negatywnej przestrzeni, hierarchii i sztuce usuwania elementów zamiast dodawania.",
+      body: ["Każdy element na ekranie konkuruje o uwagę użytkownika. Gdy dodajesz coś nowego, pytaj: co mogę zamiast tego usunąć?",
+             "Najlepsze interfejsy nie są puste — są zdyscyplinowane. Negatywna przestrzeń to nie marnotrawstwo, to narzędzie skupiania wzroku.",
+             "Ćwiczenie na dziś: otwórz swój projekt i usuń trzy elementy. Jeśli nic się nie zepsuło — właśnie go ulepszyłeś."] },
+    { t: "5 trików w CSS, które oszczędzą Ci JS-a", tag: "css", date: "5 paź 2026", read: "6 min",
+      lead: "Scroll-snap, :has(), container queries i inne supermoce nowoczesnego CSS.",
+      lead2: "",
+      body: [":has() zmienia wszystko — po raz pierwszy CSS może stylować rodzica na podstawie dziecka. To koniec całej klasy hacków JS-owych.",
+             "Scroll-snap robi karuzelę w pięciu liniach. Container queries pozwalają komponentom reagować na własny rozmiar, nie viewport.",
+             "CSS rozwija się szybciej niż kiedykolwiek. Warto raz w miesiącu przeglądać, co nowego trafiło do stabilnych wydań."] },
+    { t: "Jak zaprojektować onboarding, którego ludzie nie pominą", tag: "design", date: "28 wrz 2026", read: "5 min",
+      lead: "Pierwsze 60 sekund decyduje, czy użytkownik zostanie. Oto co działa.",
+      body: ["Onboarding to nie instrukcja — to obietnica. Pokaż wartość zanim poprosisz o cokolwiek.",
+             "Najlepiej działa progresywne odkrywanie: uczenie w momencie, gdy funkcja jest potrzebna.",
+             "Reguła kciuka: jeśli użytkownik musi przeczytać więcej niż zdanie, robisz to źle."] },
+    { t: "useSyncExternalStore po ludzku", tag: "react", date: "20 wrz 2026", read: "7 min",
+      lead: "Kiedy state żyje poza Reactem i jak podpiąć go bez hydration bugów.",
+      body: ["Każda wartość, która zmienia się poza Reactem — czas, scroll, localStorage — to kandydat do external store.",
+             "useSyncExternalStore przyjmuje subscribe i dwa snapshoty: kliencki i serwerowy. SSR zwraca deterministyczną wartość, klient dosynchronizowuje po hydracji.",
+             "To prosty wzorzec, który rozwiązuje klasę problemów, które kiedyś wymagały brzydkich obejść z useEffect."] },
+    { t: "Perfekcyjny hover state w 4 krokach", tag: "css", date: "11 wrz 2026", read: "3 min",
+      lead: "Delikatny, szybki i z sensem — jak nie przekombinować mikro-interakcji.",
+      body: ["Dobry hover odpowiada w mniej niż 150 ms. Wolniejsze animacje sprawiają, że UI wydaje się ociężały.",
+             "Zmieniaj jedną, maksymalnie dwie właściwości: transform i kolor/brzeg wystarczą.",
+             "I najważniejsze: hover ma sugerować, co się stanie po kliknięciu — nie być celem samym w sobie."] },
+  ];
+
+  const tags = ["wszystkie", "design", "css", "react"];
+  const list = document.getElementById("list");
+  const tagsEl = document.getElementById("tags");
+  const home = document.getElementById("home");
+  const article = document.getElementById("article");
+
+  let activeTag = "wszystkie";
+  let query = "";
+
+  function renderTags() {
+    tagsEl.innerHTML = "";
+    tags.forEach(t => {
+      const b = document.createElement("button");
+      b.className = "tag" + (t === activeTag ? " on" : "");
+      b.textContent = "#" + t;
+      b.addEventListener("click", () => { activeTag = t; renderTags(); render(); });
+      tagsEl.appendChild(b);
+    });
+  }
+
+  function render() {
+    list.innerHTML = "";
+    posts
+      .filter(p => (activeTag === "wszystkie" || p.tag === activeTag))
+      .filter(p => p.t.toLowerCase().includes(query.toLowerCase()))
+      .forEach(p => {
+        const a = document.createElement("a");
+        a.href = "#";
+        a.className = "post";
+        a.innerHTML = `
+          <div class="meta"><span class="t">#${p.tag}</span><span>${p.date}</span><span>·</span><span>${p.read} czytania</span></div>
+          <h2>${p.t}</h2>
+          <p>${p.lead}</p>
+          <span class="more">Czytaj dalej →</span>`;
+        a.addEventListener("click", (e) => { e.preventDefault(); open(p); });
+        list.appendChild(a);
+      });
+    if (!list.children.length) list.innerHTML = `<p style="color:var(--muted);padding:30px 0">Nic nie znaleziono.</p>`;
+  }
+
+  function open(p) {
+    document.getElementById("a-title").textContent = p.t;
+    document.getElementById("a-meta").textContent = `#${p.tag} · ${p.date} · ${p.read} czytania`;
+    document.getElementById("a-p1").textContent = p.body[0];
+    document.getElementById("a-p2").textContent = p.body[1];
+    document.getElementById("a-p3").textContent = p.body[2];
+    home.style.display = "none";
+    article.style.display = "block";
+    scrollTo({ top: 0 });
+  }
+
+  document.getElementById("back").addEventListener("click", () => {
+    article.style.display = "none";
+    home.style.display = "block";
+  });
+
+  document.getElementById("search").addEventListener("input", e => { query = e.target.value; render(); });
+
+  const themeBtn = document.getElementById("themeBtn");
+  themeBtn.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+    const dark = document.body.classList.contains("dark");
+    themeBtn.textContent = dark ? "☀️" : "🌙";
+    try { localStorage.setItem("pp-theme", dark ? "dark" : "light"); } catch {}
+  });
+  try {
+    if (localStorage.getItem("pp-theme") === "dark") {
+      document.body.classList.add("dark");
+      themeBtn.textContent = "☀️";
+    }
+  } catch {}
+
+  renderTags();
+  render();
+</script>
+</body>
+</html>
