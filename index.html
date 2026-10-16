@@ -3,142 +3,295 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Pixel Press — Blog o technologii i designie</title>
-<meta name="description" content="Pixel Press — minimalistyczny blog o frontendzie, designie i narzędziach dla twórców." />
+<title>Pixel Press — Magazyn o frontendzie, UI i architekturze webowej</title>
+<meta name="description" content="Pixel Press — praktyczne artykuły o nowoczesnym CSS, React, typografii i projektowaniu interfejsów." />
 <style>
   :root {
-    --bg: #ffffff; --panel: #f7f7f8; --border: #e6e6ea;
-    --text: #17171c; --muted: #6f6f7a; --accent: #3157ff; --code: #f0f0f4;
+    --bg: #ffffff; --panel: #f6f6f9; --border: #e5e5ec;
+    --text: #15151b; --muted: #696977; --accent: #3157ff; --code: #eef0f6;
   }
   body.dark {
-    --bg: #0d0e12; --panel: #14161c; --border: #262a35;
-    --text: #e9eaf0; --muted: #9aa0ae; --accent: #7c93ff; --code: #1b1e27;
+    --bg: #0c0d12; --panel: #13151d; --border: #252938;
+    --text: #ecedf2; --muted: #989eae; --accent: #7c95ff; --code: #1a1d28;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
-    font-family: "Segoe UI", system-ui, sans-serif;
-    background: var(--bg); color: var(--text); transition: background .3s, color .3s;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.6;
+    transition: background .25s, color .25s;
   }
+
   header {
-    position: sticky; top: 0; z-index: 10;
+    position: sticky; top: 0; z-index: 30;
     display: flex; justify-content: space-between; align-items: center;
-    padding: 16px 32px; background: var(--bg); border-bottom: 1px solid var(--border);
+    padding: 15px 32px; background: var(--bg); border-bottom: 1px solid var(--border);
   }
-  .logo { font-weight: 800; font-size: 18px; letter-spacing: -0.02em; }
+  .logo { font-weight: 800; font-size: 20px; letter-spacing: -0.03em; text-decoration: none; color: var(--text); }
   .logo span { color: var(--accent); }
+  nav { display: flex; gap: 22px; }
+  nav a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; cursor: pointer; }
+  nav a:hover { color: var(--text); }
   .controls { display: flex; gap: 10px; align-items: center; }
   .search {
     padding: 9px 16px; border: 1px solid var(--border); border-radius: 999px;
-    font-size: 13px; background: var(--panel); color: var(--text); outline: none; width: 200px;
+    font-size: 13px; background: var(--panel); color: var(--text); outline: none; width: 210px;
   }
   .search:focus { border-color: var(--accent); }
   .theme-btn {
     border: 1px solid var(--border); background: var(--panel); color: var(--text);
     width: 38px; height: 38px; border-radius: 999px; cursor: pointer; font-size: 15px;
-    transition: .15s;
   }
-  .theme-btn:hover { border-color: var(--accent); }
-  .hero { max-width: 760px; margin: 0 auto; padding: 72px 24px 40px; text-align: center; }
-  .hero .eyebrow { color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
-  .hero h1 { font-size: clamp(34px, 6vw, 54px); letter-spacing: -0.03em; margin: 14px 0; line-height: 1.05; }
-  .hero p { color: var(--muted); font-size: 17px; }
-  .tags { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 22px; }
+
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  /* FEATURED */
+  .featured {
+    margin-top: 36px; display: grid; grid-template-columns: 1.15fr 1fr; gap: 34px; align-items: center;
+    background: var(--panel); border: 1px solid var(--border); border-radius: 24px;
+    overflow: hidden; cursor: pointer; transition: .22s;
+  }
+  .featured:hover { transform: translateY(-3px); border-color: var(--accent); }
+  .featured img { width: 100%; height: 100%; min-height: 320px; object-fit: cover; }
+  .feat-body { padding: 34px 34px 34px 4px; }
+  .pill {
+    display: inline-block; background: var(--code); color: var(--accent);
+    padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700;
+  }
+  .feat-body h1 { font-size: clamp(26px, 3.4vw, 36px); letter-spacing: -0.02em; line-height: 1.15; margin: 14px 0 12px; }
+  .feat-body p { color: var(--muted); font-size: 15px; margin-bottom: 18px; }
+  .author-row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); }
+  .author-row img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
+  .author-row b { color: var(--text); }
+
+  /* TAGS */
+  .bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin: 44px 0 24px; }
+  .tags { display: flex; gap: 8px; flex-wrap: wrap; }
   .tag {
-    border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px;
-    font-size: 12px; color: var(--muted); cursor: pointer; transition: .15s; background: none;
+    border: 1px solid var(--border); border-radius: 999px; padding: 7px 16px;
+    font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; background: var(--panel);
   }
   .tag:hover { color: var(--text); border-color: var(--accent); }
   .tag.on { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .list { max-width: 760px; margin: 0 auto; padding: 20px 24px 80px; }
-  .post {
-    display: block; text-decoration: none; color: inherit;
-    padding: 28px 0; border-bottom: 1px solid var(--border); transition: .15s;
+
+  /* POSTS GRID */
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 18px;
+    overflow: hidden; cursor: pointer; transition: .22s; display: flex; flex-direction: column;
   }
-  .post:hover h2 { color: var(--accent); }
-  .post .meta { display: flex; gap: 12px; align-items: center; font-size: 12px; color: var(--muted); margin-bottom: 10px; }
-  .post .meta .t { background: var(--code); padding: 3px 10px; border-radius: 999px; color: var(--accent); font-weight: 600; }
-  .post h2 { font-size: 22px; letter-spacing: -0.02em; transition: .15s; }
-  .post p { color: var(--muted); font-size: 15px; line-height: 1.65; margin-top: 8px; }
-  .post .more { font-size: 13px; color: var(--accent); font-weight: 600; margin-top: 12px; display: inline-block; }
-  article.view {
-    max-width: 700px; margin: 0 auto; padding: 60px 24px 100px; display: none;
+  .card:hover { transform: translateY(-4px); border-color: var(--accent); }
+  .card img { width: 100%; aspect-ratio: 16/10; object-fit: cover; }
+  .card-b { padding: 20px; display: flex; flex-direction: column; flex: 1; }
+  .meta { display: flex; gap: 10px; align-items: center; font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+  .card h2 { font-size: 19px; letter-spacing: -0.015em; line-height: 1.25; margin-bottom: 8px; }
+  .card p { color: var(--muted); font-size: 14px; flex: 1; }
+  .more { color: var(--accent); font-size: 13px; font-weight: 700; margin-top: 14px; }
+
+  /* NEWSLETTER + AUTHOR */
+  .bottom-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 22px; margin: 64px 0; }
+  .nl-box, .bio-box {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 22px; padding: 32px;
   }
-  article.view h1 { font-size: clamp(30px, 5vw, 44px); letter-spacing: -0.03em; margin-bottom: 14px; }
-  article.view .meta { color: var(--muted); font-size: 13px; margin-bottom: 28px; }
-  article.view p { color: var(--text); font-size: 17px; line-height: 1.8; margin-bottom: 18px; opacity: .92; }
-  article.view .back {
-    border: none; background: none; color: var(--accent); font-size: 14px; font-weight: 600;
-    cursor: pointer; padding: 0; margin-bottom: 28px;
+  .nl-box h3, .bio-box h3 { font-size: 22px; margin-bottom: 8px; }
+  .nl-box p, .bio-box p { color: var(--muted); font-size: 14px; }
+  .nl-form { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+  .nl-form input {
+    flex: 1; min-width: 200px; padding: 12px 16px; border: 1px solid var(--border);
+    border-radius: 999px; background: var(--bg); color: var(--text); font-size: 14px; outline: none;
   }
+  .nl-form button {
+    background: var(--accent); color: #fff; border: none; padding: 12px 24px;
+    border-radius: 999px; font-weight: 700; font-size: 14px; cursor: pointer;
+  }
+  .bio-head { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+  .bio-head img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; }
+
+  /* ARTICLE VIEW */
+  article.view { max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; display: none; }
+  .back {
+    border: 1px solid var(--border); background: var(--panel); color: var(--text);
+    padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; margin-bottom: 24px;
+  }
+  article.view h1 { font-size: clamp(30px, 4.6vw, 44px); letter-spacing: -0.03em; line-height: 1.12; margin: 12px 0 14px; }
+  article.view .hero-cover { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 18px; margin: 22px 0 28px; }
+  article.view p { font-size: 17px; line-height: 1.8; margin-bottom: 18px; }
+  article.view pre {
+    background: var(--code); border: 1px solid var(--border); border-radius: 14px;
+    padding: 18px; overflow-x: auto; font-size: 13px; margin: 20px 0;
+  }
+
   footer { border-top: 1px solid var(--border); text-align: center; color: var(--muted); font-size: 13px; padding: 36px 24px; }
-  @media (max-width: 640px) { .search { width: 130px; } }
+
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translate(-50%, 90px);
+    background: var(--accent); color: #fff; padding: 12px 24px; border-radius: 999px;
+    font-size: 14px; font-weight: 600; transition: transform .3s; z-index: 90;
+  }
+  .toast.show { transform: translate(-50%, 0); }
+
+  @media (max-width: 900px) {
+    .featured, .grid, .bottom-grid { grid-template-columns: 1fr; }
+    .feat-body { padding: 24px; }
+    nav { display: none; }
+  }
 </style>
 </head>
 <body>
+
 <header>
-  <div class="logo">Pixel<span>Press</span></div>
+  <a href="#" class="logo" id="logoLink">Pixel<span>Press</span></a>
+  <nav>
+    <a data-nav="wszystkie">Artykuły</a>
+    <a data-nav="css">Nowoczesny CSS</a>
+    <a data-nav="react">React &amp; Next.js</a>
+    <a data-nav="design">UI Design</a>
+    <a href="#newsletter">Newsletter</a>
+  </nav>
   <div class="controls">
     <input class="search" id="search" type="search" placeholder="Szukaj artykułu…" />
     <button class="theme-btn" id="themeBtn" aria-label="Przełącz motyw">🌙</button>
   </div>
 </header>
 
-<div id="home">
-  <section class="hero">
-    <p class="eyebrow">Blog o frontendzie i designie</p>
-    <h1>Piszę o tym, jak powstają dobre strony.</h1>
-    <p>Krótkie esejki, praktyczne triki i przemyślenia — bez lania wody.</p>
+<div id="home" class="wrap">
+  <div class="featured" id="featured">
+    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1100&q=80" alt="Kod na ekranie laptopa" />
+    <div class="feat-body">
+      <span class="pill">Wyróżniony artykuł · #react</span>
+      <h1>Architektura Server &amp; Client Components w praktyce — przewodnik bez mitów</h1>
+      <p>Gdzie naprawdę przebiega granica między serwerem a przeglądarką w Next.js 16 i jak unikać najczęstszych błędów hydracji.</p>
+      <div class="author-row">
+        <img src="https://randomuser.me/api/portraits/men/36.jpg" alt="Adrian" />
+        <span><b>Adrian Pietryga</b> · 14 paź 2026 · 8 min czytania</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bar">
     <div class="tags" id="tags"></div>
-  </section>
-  <div class="list" id="list"></div>
+    <span style="color:var(--muted);font-size:13px" id="countLabel"></span>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="bottom-grid" id="newsletter">
+    <div class="nl-box">
+      <span class="pill">Cotygodniowy skrót</span>
+      <h3 style="margin-top:10px">Newsletter dla ludzi, którzy budują web</h3>
+      <p>Raz w każdy czwartek: jeden pogłębiony artykuł, trzy ciekawe linki i fragment kodu gotowy do wklejenia w projekcie. Zero spamu — czyta już 2 400 osób.</p>
+      <form class="nl-form" id="nlForm">
+        <input type="email" required placeholder="twoj@email.pl" />
+        <button type="submit">Zapisz się za darmo</button>
+      </form>
+    </div>
+
+    <div class="bio-box">
+      <div class="bio-head">
+        <img src="https://randomuser.me/api/portraits/men/36.jpg" alt="Autor" />
+        <div><b>Adrian Pietryga</b><span style="color:var(--muted);font-size:13px;display:block">Front-End Developer &amp; Autor</span></div>
+      </div>
+      <p>Piszę o rzemiośle frontendowym: szybkim UI, czystym CSS i architekturze aplikacji w React oraz Next.js.</p>
+    </div>
+  </div>
 </div>
 
 <article class="view" id="article">
-  <button class="back" id="back">← Wróć do listy</button>
+  <button class="back" id="back">← Wróć do wszystkich artykułów</button>
+  <div><span class="pill" id="a-tag"></span></div>
   <h1 id="a-title"></h1>
-  <p class="meta" id="a-meta"></p>
-  <p id="a-p1"></p>
-  <p id="a-p2"></p>
-  <p id="a-p3"></p>
+  <div class="author-row" style="margin-bottom:10px">
+    <img src="https://randomuser.me/api/portraits/men/36.jpg" alt="Adrian" />
+    <span id="a-meta"></span>
+  </div>
+  <img class="hero-cover" id="a-img" src="" alt="" />
+  <div id="a-body"></div>
 </article>
 
+<div class="toast" id="toast"></div>
+
 <footer>
-  Pixel Press — demonstracyjny blog · HTML / CSS / JavaScript
+  © 2026 Pixel Press — projekt demonstracyjny w portfolio Adriana Pietrygi · HTML / CSS / JavaScript
 </footer>
 
 <script>
   const posts = [
-    { t: "Dlaczego mniej znaczy więcej w UI", tag: "design", date: "12 paź 2026", read: "4 min",
-      lead: "O negatywnej przestrzeni, hierarchii i sztuce usuwania elementów zamiast dodawania.",
-      body: ["Każdy element na ekranie konkuruje o uwagę użytkownika. Gdy dodajesz coś nowego, pytaj: co mogę zamiast tego usunąć?",
-             "Najlepsze interfejsy nie są puste — są zdyscyplinowane. Negatywna przestrzeń to nie marnotrawstwo, to narzędzie skupiania wzroku.",
-             "Ćwiczenie na dziś: otwórz swój projekt i usuń trzy elementy. Jeśli nic się nie zepsuło — właśnie go ulepszyłeś."] },
-    { t: "5 trików w CSS, które oszczędzą Ci JS-a", tag: "css", date: "5 paź 2026", read: "6 min",
-      lead: "Scroll-snap, :has(), container queries i inne supermoce nowoczesnego CSS.",
-      lead2: "",
-      body: [":has() zmienia wszystko — po raz pierwszy CSS może stylować rodzica na podstawie dziecka. To koniec całej klasy hacków JS-owych.",
-             "Scroll-snap robi karuzelę w pięciu liniach. Container queries pozwalają komponentom reagować na własny rozmiar, nie viewport.",
-             "CSS rozwija się szybciej niż kiedykolwiek. Warto raz w miesiącu przeglądać, co nowego trafiło do stabilnych wydań."] },
-    { t: "Jak zaprojektować onboarding, którego ludzie nie pominą", tag: "design", date: "28 wrz 2026", read: "5 min",
-      lead: "Pierwsze 60 sekund decyduje, czy użytkownik zostanie. Oto co działa.",
-      body: ["Onboarding to nie instrukcja — to obietnica. Pokaż wartość zanim poprosisz o cokolwiek.",
-             "Najlepiej działa progresywne odkrywanie: uczenie w momencie, gdy funkcja jest potrzebna.",
-             "Reguła kciuka: jeśli użytkownik musi przeczytać więcej niż zdanie, robisz to źle."] },
-    { t: "useSyncExternalStore po ludzku", tag: "react", date: "20 wrz 2026", read: "7 min",
-      lead: "Kiedy state żyje poza Reactem i jak podpiąć go bez hydration bugów.",
-      body: ["Każda wartość, która zmienia się poza Reactem — czas, scroll, localStorage — to kandydat do external store.",
-             "useSyncExternalStore przyjmuje subscribe i dwa snapshoty: kliencki i serwerowy. SSR zwraca deterministyczną wartość, klient dosynchronizowuje po hydracji.",
-             "To prosty wzorzec, który rozwiązuje klasę problemów, które kiedyś wymagały brzydkich obejść z useEffect."] },
-    { t: "Perfekcyjny hover state w 4 krokach", tag: "css", date: "11 wrz 2026", read: "3 min",
-      lead: "Delikatny, szybki i z sensem — jak nie przekombinować mikro-interakcji.",
-      body: ["Dobry hover odpowiada w mniej niż 150 ms. Wolniejsze animacje sprawiają, że UI wydaje się ociężały.",
-             "Zmieniaj jedną, maksymalnie dwie właściwości: transform i kolor/brzeg wystarczą.",
-             "I najważniejsze: hover ma sugerować, co się stanie po kliknięciu — nie być celem samym w sobie."] },
+    {
+      t: "Architektura Server & Client Components w praktyce — przewodnik bez mitów",
+      tag: "react", date: "14 paź 2026", read: "8 min",
+      img: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1000&q=80",
+      lead: "Gdzie naprawdę przebiega granica między serwerem a przeglądarką i jak unikać błędów hydracji.",
+      code: `// Komponent serwerowy pobiera dane bez dokładania JS do bundla\nexport default async function ProductList() {\n  const items = await db.products.findMany();\n  return <ClientFilter items={items} />;\n}`,
+      body: [
+        "Domyślnie każdy komponent w App Routerze wykonuje się na serwerze. Oznacza to mniej JavaScriptu wysyłanego do przeglądarki i bezpośredni dostęp do danych.",
+        "Dyrektywę 'use client' umieszczaj jak najniżej w drzewie — tylko na interaktywnych liściach (przycisk koszyka, filtr, modal), a nie na całych sekcjach strony.",
+        "Jeśli potrzebujesz wartości zależnej od przeglądarki (np. bieżącej strefy czasowej lub localStorage), sięgnij po useSyncExternalStore zamiast useEffect + setState."
+      ]
+    },
+    {
+      t: "5 funkcji nowoczesnego CSS, które zastąpią Ci połowę skryptów JS",
+      tag: "css", date: "8 paź 2026", read: "6 min",
+      img: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=900&q=80",
+      lead: "Selektor :has(), container queries, scroll-snap i animacje oparte o przewijanie bez jednej linijki JavaScriptu.",
+      code: `.card:has(input:checked) {\n  border-color: var(--accent);\n  box-shadow: 0 12px 30px -12px rgba(49,87,255,.35);\n}`,
+      body: [
+        "Selektor :has() pozwala wreszcie stylować rodzica na podstawie stanu dziecka — np. podświetlić całą kartę formularza, gdy znajdujący się w niej checkbox jest zaznaczony.",
+        "Container queries (@container) uniezależniają komponent od szerokości całego ekranu. Ta sama karta produktu może ułożyć się poziomo w szerokiej kolumnie i pionowo w sidebarze.",
+        "Zanim sięgniesz po zewnętrzną bibliotekę do karuzeli, sprawdź duet scroll-snap-type oraz overscroll-behavior — obsługuje dotyk i gładkie przewijanie natywnie."
+      ]
+    },
+    {
+      t: "Dlaczego negatywna przestrzeń to najważniejsze narzędzie projektanta UI",
+      tag: "design", date: "1 paź 2026", read: "5 min",
+      img: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80",
+      lead: "Jak za pomocą odstępów, kontrastu i skali typograficznej prowadzić wzrok użytkownika bez dokładania ramek.",
+      code: `/* Skala odstępów oparta o wielokrotności 8 px */\n.section { padding-block: clamp(4rem, 8vw, 7rem); }\n.stack > * + * { margin-top: 1.5rem; }`,
+      body: [
+        "Każdy dodatkowy border, cień czy ikona konkuruje o uwagę. Zamiast oddzielać sekcje linią, spróbuj podwoić odstęp między nimi — hierarchia stanie się oczywista.",
+        "Dobry układ strony zaczyna się od typografii: wyraźny kontrast między nagłówkiem (tracking -0.03em) a tekstem pomocniczym w stonowanym szarym kolorze robi 80% pracy.",
+        "Prosty test: zmruż oczy patrząc na makietę. Jeśli od razu widzisz główny nagłówek i przycisk CTA — hierarchia działa."
+      ]
+    },
+    {
+      t: "Mikro-interakcje i stany hover, które dają wrażenie produktu premium",
+      tag: "design", date: "24 wrz 2026", read: "4 min",
+      img: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=900&q=80",
+      lead: "Czas trwania, krzywe cubic-bezier i subtelne podniesienie karty — kompletny przepis na responsywny interfejs.",
+      code: `.card {\n  transition: transform 220ms cubic-bezier(.2,.8,.2,1),\n              border-color 220ms ease;\n}\n.card:hover { transform: translateY(-4px); }`,
+      body: [
+        "Animacja po najechaniu kursorem powinna trwać między 150 a 250 ms. Wolniejsze przejścia sprawiają, że interfejs wydaje się ociężały.",
+        "Unikaj animowania wszystkiego naraz — delikatne przesunięcie w górę (translateY -4px) i rozjaśnienie obramowania w zupełności wystarczą.",
+        "Pamiętaj o użytkownikach z włączonym prefers-reduced-motion i wyłączaj dla nich zbędny ruch."
+      ]
+    },
+    {
+      t: "Optymalizacja obrazów i czcionek pod wynik 100/100 w Lighthouse",
+      tag: "react", date: "16 wrz 2026", read: "7 min",
+      img: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80",
+      lead: "Jak wyeliminować przesunięcia układu (CLS) i przyspieszyć Largest Contentful Paint poniżej 1,2 sekundy.",
+      code: `<img\n  src="hero.webp"\n  width="1200" height="800"\n  fetchpriority="high"\n  alt="Podgląd aplikacji"\n/>`,
+      body: [
+        "Najczęstszą przyczyną słabego wyniku LCP jest leniwe ładowanie (loading='lazy') ustawione omyłkowo na głównym obrazku w sekcji Hero. Obraz nad linią zgięcia powinien mieć priorytet wysoki.",
+        "Zawsze podawaj proporcje (aspect-ratio lub atrybuty width/height), aby przeglądarka zarezerwowała miejsce zanim plik graficzny spłynie z sieci.",
+        "Czcionki self-hostowane przez next/font ładują się z tej samej domeny co HTML i eliminują skok tekstu przy pierwszym renderze."
+      ]
+    },
+    {
+      t: "Jak ułożyć system tokenów kolorystycznych dla trybu jasnego i ciemnego",
+      tag: "css", date: "7 wrz 2026", read: "5 min",
+      img: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80",
+      lead: "Semantyczne zmienne CSS zamiast duplikowania klas — czysty motyw ciemny w 15 linijkach.",
+      code: `:root {\n  --bg: #ffffff; --panel: #f6f6f9; --text: #15151b;\n}\nbody.dark {\n  --bg: #0c0d12; --panel: #13151d; --text: #ecedf2;\n}`,
+      body: [
+        "Zamiast nazywać zmienne --gray-100 czy --gray-900, nazwij je według roli: --bg, --panel, --border, --text, --muted.",
+        "Dzięki temu przełączenie całego motywu sprowadza się do podmiany kilku wartości na elemencie body — bez dotykania pojedynczych komponentów.",
+        "W trybie ciemnym unikaj czystej czerni (#000) na dużych powierzchniach — głęboki grafit (#0c0d12) jest znacznie przyjemniejszy dla oczu."
+      ]
+    },
   ];
 
-  const tags = ["wszystkie", "design", "css", "react"];
-  const list = document.getElementById("list");
+  const tags = ["wszystkie", "react", "css", "design"];
+  const grid = document.getElementById("grid");
   const tagsEl = document.getElementById("tags");
   const home = document.getElementById("home");
   const article = document.getElementById("article");
@@ -151,46 +304,68 @@
     tags.forEach(t => {
       const b = document.createElement("button");
       b.className = "tag" + (t === activeTag ? " on" : "");
-      b.textContent = "#" + t;
+      b.textContent = t === "wszystkie" ? "Wszystkie" : "#" + t;
       b.addEventListener("click", () => { activeTag = t; renderTags(); render(); });
       tagsEl.appendChild(b);
     });
   }
 
   function render() {
-    list.innerHTML = "";
-    posts
-      .filter(p => (activeTag === "wszystkie" || p.tag === activeTag))
-      .filter(p => p.t.toLowerCase().includes(query.toLowerCase()))
-      .forEach(p => {
-        const a = document.createElement("a");
-        a.href = "#";
-        a.className = "post";
-        a.innerHTML = `
-          <div class="meta"><span class="t">#${p.tag}</span><span>${p.date}</span><span>·</span><span>${p.read} czytania</span></div>
+    grid.innerHTML = "";
+    const filtered = posts
+      .filter(p => activeTag === "wszystkie" || p.tag === activeTag)
+      .filter(p => p.t.toLowerCase().includes(query.toLowerCase()) || p.lead.toLowerCase().includes(query.toLowerCase()));
+
+    document.getElementById("countLabel").textContent = `Wyświetlane artykuły: ${filtered.length}`;
+
+    filtered.forEach(p => {
+      const card = document.createElement("article");
+      card.className = "card";
+      card.innerHTML = `
+        <img src="${p.img}" alt="${p.t}" loading="lazy" />
+        <div class="card-b">
+          <div class="meta"><span class="pill">#${p.tag}</span><span>${p.date}</span><span>·</span><span>${p.read}</span></div>
           <h2>${p.t}</h2>
           <p>${p.lead}</p>
-          <span class="more">Czytaj dalej →</span>`;
-        a.addEventListener("click", (e) => { e.preventDefault(); open(p); });
-        list.appendChild(a);
-      });
-    if (!list.children.length) list.innerHTML = `<p style="color:var(--muted);padding:30px 0">Nic nie znaleziono.</p>`;
+          <span class="more">Czytaj artykuł →</span>
+        </div>`;
+      card.addEventListener("click", () => openPost(p));
+      grid.appendChild(card);
+    });
   }
 
-  function open(p) {
+  function openPost(p) {
+    document.getElementById("a-tag").textContent = "#" + p.tag;
     document.getElementById("a-title").textContent = p.t;
-    document.getElementById("a-meta").textContent = `#${p.tag} · ${p.date} · ${p.read} czytania`;
-    document.getElementById("a-p1").textContent = p.body[0];
-    document.getElementById("a-p2").textContent = p.body[1];
-    document.getElementById("a-p3").textContent = p.body[2];
+    document.getElementById("a-meta").innerHTML = `<b>Adrian Pietryga</b> · ${p.date} · ${p.read} czytania`;
+    document.getElementById("a-img").src = p.img;
+    document.getElementById("a-body").innerHTML =
+      p.body.map(par => `<p>${par}</p>`).join("") +
+      `<pre><code>${p.code.replace(/</g, "&lt;")}</code></pre>`;
     home.style.display = "none";
     article.style.display = "block";
-    scrollTo({ top: 0 });
+    scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  document.getElementById("featured").addEventListener("click", () => openPost(posts[0]));
   document.getElementById("back").addEventListener("click", () => {
     article.style.display = "none";
     home.style.display = "block";
+  });
+  document.getElementById("logoLink").addEventListener("click", e => {
+    e.preventDefault();
+    article.style.display = "none";
+    home.style.display = "block";
+  });
+
+  document.querySelectorAll("nav a[data-nav]").forEach(a => {
+    a.addEventListener("click", () => {
+      article.style.display = "none";
+      home.style.display = "block";
+      activeTag = a.dataset.nav;
+      renderTags();
+      render();
+    });
   });
 
   document.getElementById("search").addEventListener("input", e => { query = e.target.value; render(); });
@@ -198,16 +373,17 @@
   const themeBtn = document.getElementById("themeBtn");
   themeBtn.addEventListener("click", () => {
     document.body.classList.toggle("dark");
-    const dark = document.body.classList.contains("dark");
-    themeBtn.textContent = dark ? "☀️" : "🌙";
-    try { localStorage.setItem("pp-theme", dark ? "dark" : "light"); } catch {}
+    themeBtn.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
   });
-  try {
-    if (localStorage.getItem("pp-theme") === "dark") {
-      document.body.classList.add("dark");
-      themeBtn.textContent = "☀️";
-    }
-  } catch {}
+
+  document.getElementById("nlForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const t = document.getElementById("toast");
+    t.textContent = "Dzięki za zapis! Pierwszy numer w czwartek ✉️";
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2500);
+    e.target.reset();
+  });
 
   renderTags();
   render();
